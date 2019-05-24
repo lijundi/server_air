@@ -1,10 +1,116 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>设置参数</title>
+<title>manager_set_para</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<!--bootstrap4-->
+<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
+<!-- google fonts -->
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Pontano+Sans' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Shadows+Into+Light' rel='stylesheet' type='text/css'>
+<!-- end google fonts -->
+<link href="./css/style.css" rel="stylesheet" type="text/css" media="all" />
+<!--nav-->
+<script src="./js/jquery.min.js"></script>
+<style>
+      a:link {color:#000000;}      /* 未访问链接*/
+    a:visited {color:#FF00FF;}  /* 已访问链接 */
+    a:hover {color:#00FFFF;}  /* 鼠标移动到链接上 */
+    a:active {color:#0000FF;}  /* 鼠标点击时 */
+
+
+.button1 {
+    background-color: #FFFACD/* Green */
+    border: none;
+    color: black;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+</style>
+
 </head>
+
+
 <body>
-填参数提交
+
+<div class="wrap">
+<div class="wrapper">
+    <!-- start header-->
+    <div class="header">
+        <div class="logo">
+            <a href="index.html"><img src="./images/logo.png" alt=""></a>
+        </div>
+        <div class="cssmenu">
+            <ul>
+                <li><a href="index.html">后台管理功能介绍</a></li>
+                <li><a href="reception.html">前台</a></li>
+                <li><a href="boss.html">经理</a></li>
+                <li class="active"><a href="manager.html">管理员</a></li>
+                <div class="clear"></div>
+             </ul>
+        </div>
+        <div class="clear"></div>
+    </div>
+
+  
+     <div class="main1">
+         <div class="content">
+            <h2>设置空调参数</h2>
+       </div>
+
+        <div class="container">
+
+          <h3 style="text-align:center",><span class="badge badge-info">中央空调参数设定</span></h3>
+
+            <form class="form-horizontal" action="." method="post">
+              <div class="form-group">
+                 <label for="mode">模式</label>
+                    <select class="form-control" id="mode">
+                               <option value="0">制冷</option>
+                               <option valie="1">制热</option>
+                    </select>   
+              </div>
+
+              <div class="form-group">
+                 <label for="Temp_highLimit">最高温度:</label>
+                    <input  type="text" class="form-control" id="{{ Temp_highLimit }}" placeholder="请输入最高温度">
+              </div>
+
+              <div class="form-group">
+                 <label for="Temp_lowLimit">最低温度:</label>
+                    <input  type="text" class="form-control" id="{{ Temp_lowLimit }}" placeholder="请输入最高温度">
+              </div>
+
+              <div class="form-group">
+                 <label for="default_TargetTemp ">目标温度:</label>
+                    <input  type="text" class="form-control" id="{{ default_TargetTemp }}" placeholder="请输入目标温度">
+              </div>
+
+              <div class="form-group">
+                 <label for="FeeRate">费率</label>
+                    <select class="form-control" id="{{ FeeRate }}">
+                               <option value="FeeRate_H">高</option>
+                               <option value="FeeRate_M">中</option>
+                               <option value="FeeRate_L">低</option>
+                    </select>   
+              </div>
+
+              <div align="center" style="position:relative;top:10px">
+                <input type="submit" class="btn btn-info" value="提交">
+              </div>
+            </form>
+
+  </div>
+</div>
+</div>
+</div>
 </body>
 </html>

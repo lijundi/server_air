@@ -1,10 +1,137 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>经理</title>
+<title>boss</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<!--bootstrap4-->
+<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
+<!-- google fonts -->
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Pontano+Sans' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Shadows+Into+Light' rel='stylesheet' type='text/css'>
+<!-- end google fonts -->
+<link href="./css/style.css" rel="stylesheet" type="text/css" media="all" />
+<!--nav-->
+<script src="./js/jquery.min.js"></script>
+<style>
+	  a:link {color:#000000;}      /* 未访问链接*/
+    a:visited {color:#FF00FF;}  /* 已访问链接 */
+    a:hover {color:#00FFFF;}  /* 鼠标移动到链接上 */
+    a:active {color:#0000FF;}  /* 鼠标点击时 */
+
+
+.button1 {
+    background-color: #FFFACD/* Green */
+    border: none;
+    color: black;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+</style>
+
 </head>
+
+
 <body>
-显示所有
+
+<div class="wrap">
+<div class="wrapper">
+	<!-- start header-->
+	<div class="header">
+		<div class="logo">
+			<a href="index.html"><img src="./images/logo.png" alt=""></a>
+		</div>
+		<div class="cssmenu">
+			<ul>
+			  	<li><a href="index.html">后台管理功能介绍</a></li>
+				<li><a href="reception.html">前台</a></li>
+				<li class="active"><a href="boss.html">经理</a></li>
+				<li class="has-sub"><a href="manager.html">管理员</a></li>
+				<div class="clear"></div>
+			 </ul>
+		</div>
+		<div class="clear"></div>
+	</div>
+
+    <!-- start content -->
+	 <div class="main1">
+	 	 <div class="content">
+	 	 	<h2>欢迎进入经理管理界面</h2>
+	   </div>
+
+     <div class="container">
+      {% for room in Room %} 
+    	 <h3 style="text-align:center",id={{ room_id }}><span class="badge badge-info">房间 {{ room_id }}</span></h3>
+         <table class="table table-striped table-bordered">
+          	<tr>
+          		<td><b>开关次数</b></td>
+          		<td>{{ times_of_on_and_off }}</td>
+          	</tr>
+
+          	<tr>
+          		<td><b>使用时长</b></td>
+          		<td>{{ serving_duration }}</td>
+          	</tr>
+
+          	<tr>
+          		<td><b>总费用</b></td>
+          		<td>{{ total_Fee }}</td>
+          	</tr>
+
+          	<tr>
+          		<td><b>调度次数</b></td>
+          		<td>{{ times_of_dispatch }}</td>
+          	</tr>
+
+          	<tr>
+          		<td><b>详单数</b></td>
+          		<td>{{ number_of_RDR }}</td>
+          	</tr>
+
+          	<tr>
+          		<td><b>调温次数</b></td>
+          		<td>{{ times_of_changeTemp }}</td>
+          	</tr>
+
+          	<tr>
+          		<td><b>调风次数</b></td>
+          		<td>{{ times_of_changeFanSpeed }}</td>
+          	</tr>
+        </table>
+      {% endfor %}
+      
+        <div align="center" style="position:relative;top:10px">
+            <button class="button1 btn-outline-info"><a href="   ">打印报表</a></button>
+        </div>
+</div>
+</div>
+</div>
+</div>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

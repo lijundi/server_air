@@ -1,0 +1,261 @@
+
+article, aside, details, figcaption, figure,footer, header, hgroup, menu, nav, section {display: block;}
+blockquote,q{quotes:none;}
+blockquote:before,blockquote:after,q:before,q:after{content:'';content:none;}
+table{border-collapse:collapse;border-spacing:0;}
+/* start editing from here */
+
+.clear{clear:both;}/* clear float */
+.pos-relative{position:relative;}/* Position Relative */
+.pos-absolute{position:absolute;}/* Position Absolute */
+.vertical-base{	vertical-align:baseline;}/* vertical align baseline */
+.vertical-top{	vertical-align:top;}/* vertical align top */
+.underline{	padding-bottom:5px;	border-bottom: 1px solid #eee; margin:0 0 20px 0;}/* Add 5px bottom padding and a underline */
+nav.vertical ul li{	display:block;}/* vertical menu */
+nav.horizontal ul li{	display: inline-block;}/* horizontal menu */
+img{max-width:100%;}
+/*end reset*/
+body {
+	font-family:trebuchet ms, arial, sans-serif;
+	font-size: 100%;
+	background: #ffffff;
+	color:#555555;
+}
+.wrap{
+	margin:0 auto;
+	width:80%;
+}
+.wrapper{
+	padding: 4% 6%;
+}
+/* start header*/
+.header{
+	display: block;
+}
+.logo{
+	float:left;
+}
+/*menu*/
+.cssmenu {
+	float: right;
+	margin-top: 1%;
+}
+.cssmenu > ul > li {
+	display:inline-block;
+	position: relative;
+}
+.cssmenu > ul > li.active a{
+	color:#ffffff;
+	background-color:#FF61A0;
+}
+.cssmenu > ul > li span img {
+	vertical-align: middle;
+}
+.cssmenu > ul > li > a {
+	font-weight:bold;
+	color: #555555;
+	display: block;
+	font-size: 15px;
+	line-height: 1.8em;
+	padding: 24px 26px;
+	text-transform: uppercase;
+	-webkit-transition: all 0.3s ease-out;
+	-moz-transition: all 0.3s ease-out;
+	-ms-transition: all 0.3s ease-out;
+	-o-transition: all 0.3s ease-out;
+	transition: all 0.3s ease-out;
+}
+.cssmenu > ul > li > a:hover {
+	background-color:#FF61A0;
+	color: #ffffff;
+}
+/* display with 840px  */
+.top-nav{
+	display: none;
+}
+.nav_bg{
+	background: #464646;
+}
+.clearfix {
+	height: 40px;
+	width: 100%;
+	font-size: 11pt;
+	font-weight: bold;
+	position: relative;
+	z-index: 9999;
+}
+.clearfix ul {
+	padding: 0;
+	margin: 0 auto;
+	display: none;
+	background: #f0f0f0;
+}
+.clearfix li {
+	display: block;
+}
+
+
+
+/* start main */
+.main{
+	display: block;
+}
+.content h2{
+	font-weight:700;
+	line-height: 1.5em;
+	font-size: 1.5em;
+	color: #555555;
+	text-transform: uppercase;
+	padding: 10px 0;
+	border-bottom: 1px solid rgb(209, 209, 209);
+}
+
+/* start portfolio */
+.main1{
+	margin: 4% 0 0;
+}
+p.para {
+	margin: 4% 0;
+	font-size: 1em;
+	color: #777777;
+	line-height: 1.8em;
+	font-family: 'Open Sans', sans-serif;
+}
+
+.btn:hover{
+	background: #EC5792;	
+}
+p.para1 {
+	margin: 2% 0;
+	font-size: 1em;
+	color: #777777;
+	line-height: 1.8em;
+	font-family: 'Open Sans', sans-serif;
+}
+/***Contact*/
+.map{
+	margin: 4% 0 2%;
+}
+form{
+	margin-top: 2%;
+}
+.col{
+	display: block;
+}
+
+/***** Media Quries *****/
+@media only screen and (max-width: 1280px) {
+	.wrap{
+		width:95%;
+	}
+}
+@media only screen and (max-width: 1024px) {
+	.wrap{
+		width:95%;
+	}
+	.wrapper {
+		padding: 2% 4%;
+	}
+	.logo{
+		width: 30%;
+		float:left;
+	}
+	.cssmenu > ul > li > a {
+		font-size: 15px;
+		line-height: 1.5em;
+		padding: 16px 14px;
+	}
+}
+@media only screen and (max-width: 800px) {
+	.wrap{
+		width:95%;
+	}
+	.logo{
+		text-align:center;
+		float:none;
+		width:100%;
+		margin-bottom: 4%;
+	}
+	.cssmenu {
+		display: none;
+	}
+	.top-nav{
+		display:block;
+	}
+	.foot_nav ul li {
+		margin-right: 0%;
+	}
+	.grid_1_of_4:nth-child(3){
+		margin-left: 0;
+	}
+	.grid_1_of_4 {
+		display: block;
+		float: left;
+		margin: 4% 0 0 4%;
+	}
+	.images_1_of_4 {
+		width: 47.99999%;
+	}
+}
+@media only screen and (max-width: 640px){
+	.wrap{
+		width:95%;
+	}
+	.grid_1_of_4:nth-child(3){
+		margin-left: 0;
+	}
+	.grid_1_of_4 {
+		display: block;
+		float: left;
+		margin: 4% 0 0 4%;
+	}
+	.images_1_of_4 {
+		width: 47.99999%;
+	}
+	.grid_1_of_3 {
+		float: none;
+		margin: 3% 0;
+	}
+	.images_1_of_3 {
+		width: 99.33333%;
+	}
+	.span_1_of_3 {
+		float: none;
+		margin: 3% 0;
+	}
+	.span_1_of_3 {
+		margin-top: 4%;
+		width: 99.33333%;
+	}
+	.footer_grid {
+		margin-top: 2%;
+	}
+	.foot_nav {
+		margin-top: 2%;
+	}
+	.span_1_of_3 a h4 {
+		margin-top: 2%;
+	}
+}
+@media only screen and (max-width: 480px) {
+	.wrap{
+		width:95%;
+	}
+	.span_1_of_3 {
+		margin-top: 4%;
+	}
+	.span_1_of_3 a h4 {
+		margin-top: 0%;
+	}
+}
+@media only screen and (max-width: 320px) {
+	.wrap{
+		width:95%;
+	}
+	.banner h2 {
+		font-size: 2em;
+	}
+	.content h2 {
+		font-size: 1.4em;
+	}
+}
