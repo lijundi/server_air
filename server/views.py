@@ -34,6 +34,7 @@ def get_invoice(request):
 def manager(request):
     return render(request, 'manager.html', locals())
 
+
 # 设置空调参数
 def manager_set_para(request):
     if request.method == 'post':
@@ -61,6 +62,7 @@ def boss(request):
 def boss_report(request):
     report = Report.objects.all()
     return render(request, 'boss.html', {'report': report})
+
 
 # 打印报表
 def boss_print_report(request):
