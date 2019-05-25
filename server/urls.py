@@ -12,5 +12,5 @@ urlpatterns = [
     path('manager_check_state/', views.manager_check_state, name='manager_check_state'),
     path('boss/', views.boss, name='boss'),
     path('boss_report/', views.boss_report, name='boss_report'),
-    path('boss_print_report/', views.boss_printreport, name='boss_print_report'),
+    path('boss_print_report/', views.boss_print_report, name='boss_print_report'),
 ]

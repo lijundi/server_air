@@ -4,16 +4,14 @@
 <title>酒店分布式温控系统|前台</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
-<!-- google fonts -->
+<!-- Google fonts -->
 <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=Pontano+Sans' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=Shadows+Into+Light' rel='stylesheet' type='text/css'>
 <!-- end google fonts -->
-<link href="./css/style.css" rel="stylesheet" type="text/css" media="all" />
+<link href="/static/css/style.css" rel="stylesheet" type="text/css" media="all" />
 <!--nav-->
-<script src="./js/jquery.min.js"></script>
-
+<script src="/static/js/jquery.min.js"></script>
 <style>
       a:link {color:#000000;}      /* 未访问链接*/
     a:visited {color:#FF00FF;}  /* 已访问链接 */
@@ -34,7 +32,6 @@
     cursor: pointer;
 }
 </style>
-</head>
 
 <body>
 <div class="body">
@@ -43,14 +40,14 @@
 	<!-- start header-->
 	<div class="header">
 		<div class="logo">
-			<a href="index.html"><img src="./images/logo.png" alt=""></a>
+			<a href="{% url 'index' %}"><img src="/static/images/logo.png" alt=""></a>
 		</div>
 		<div class="cssmenu">
 			<ul>
-			  	<li><a href="index.html">后台管理功能介绍</a></li>
-				<li class="active"><a href="reception.html">前台</a></li>
-				<li><a href="boss.html">经理</a></li>
-				<li class="has-sub"><a href="manager.html">管理员</a></li>
+			  	<li><a href="{% url 'index' %}">后台管理功能介绍</a></li>
+				<li class="active"><a href="{% url 'reception' %}">前台</a></li>
+				<li><a href="{% url 'boss' %}">经理</a></li>
+				<li class="has-sub"><a href="{% url 'manager' %}">管理员</a></li>
 				<div class="clear"></div>
 			 </ul>
 		</div>
@@ -78,16 +75,21 @@
 	 	 		<thead>
 	 	 			<tr>
 	 	 				<th>请求序号</th>
-            <th>请求时间</th>
+                        <th>请求时间</th>
 	 	 				<th>请求时长</th>
+                        <th>风速</th>
+                        <th>费率</th>
+                        <th>费用</th>
 	 	 			</tr>
         </thead>
 
-        {% for i in records %}
+        {% for r in records %}
           <tr>
-            <td>{{ i }}</td>
-            <td>{{ request_time }}</td>
-            <td>{{ request_duration }}</td>
+            <td>{{ r.request_time }}</td>
+            <td>{{ r.request_duration }}</td>
+            <td>{{ r.fan_speed }}</td>
+            <td>{{ r.fee_rate }}</td>
+            <td>{{ r.fee }}</td>
           </tr>
         {% endfor %}
 

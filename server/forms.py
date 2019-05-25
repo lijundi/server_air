@@ -9,9 +9,9 @@ class ParaModelForm(forms.ModelForm):
                   'FeeRate_L']
 
 
-class ReportForm(forms.ModelForm):
-    class Meta:
-        model = Report
-        fields = ['room', 'times_of_on_and_off', 'serving_duration', 'total_Fee', 'times_of_dispatch',
-                  'number_of_RDR',
-                  ' times_of_changeTemp', 'times_of_changeFanSpeed']
+# class ReportForm(forms.ModelForm):
+#     class Meta:
+#         model = Report
+#         fields = ['room', 'times_of_on_and_off', 'serving_duration', 'total_Fee', 'times_of_dispatch',
+#                   'number_of_RDR',
+#                   'times_of_changeTemp', 'times_of_changeFanSpeed']
