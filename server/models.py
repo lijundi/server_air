@@ -4,9 +4,9 @@ from django.db import models
 # Create your models here.
 # 基类
 class Basic(models.Model):
-    fan_speed = models.IntegerField()  # 0:低速风 1:中速风 2:高速风
-    fee_rate = models.FloatField()
-    fee = models.FloatField()
+    fan_speed = models.IntegerField(default=1)  # 0:低速风 1:中速风 2:高速风
+    fee_rate = models.FloatField(default=1)
+    fee = models.FloatField(default=0)
 
     class Meta:
         abstract = True
@@ -15,12 +15,12 @@ class Basic(models.Model):
 # 房间类
 class Room(Basic):
     room_id = models.IntegerField(primary_key=True)
-    state_working = models.BooleanField()
-    state_serving = models.BooleanField()
-    state_waiting = models.BooleanField()
-    current_temp = models.IntegerField()
-    target_temp = models.IntegerField()
-    serving_duration = models.IntegerField()
+    state_working = models.BooleanField(default=False)
+    state_serving = models.BooleanField(default=False)
+    state_waiting = models.BooleanField(default=False)
+    current_temp = models.IntegerField(default=25)
+    target_temp = models.IntegerField(default=25)
+    serving_duration = models.IntegerField(default=0)
 
 
 # 详单类

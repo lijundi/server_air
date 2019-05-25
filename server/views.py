@@ -1,6 +1,9 @@
+import json
+
 from django.shortcuts import render
-from django.http import HttpResponseRedirect,HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse
 from server.forms import ParaModelForm
+from dwebsocket.decorators import accept_websocket
 from .models import *
 
 
@@ -14,20 +17,15 @@ def reception(request):
     return render(request, 'reception.html')
 
 
-def get_records(request):
+def get_records_and_invoice(request):
     if request.method == 'post':
         room_id = request.POST['room_id']
         records = RequestDetailRecords.objects.filter(room_id=room_id).order_by('request_time')
-        return render(request, 'reception.html', {'records': records})
+        report = Report.objects.get(room_id=room_id)
+        total_fee = report.total_Fee
+        return render(request, 'reception.html', {'records': records, 'total_fee': total_fee})
     else:
         return render(request, 'reception.html')
-
-
-def get_invoice(request):
-    if request.method == 'post':
-        room_id = request.POST['room_id']
-        room = Room.objects.get(room_id=room_id)
-    return render(request, 'reception.html', locals())
 
 
 # 管理员
@@ -69,3 +67,15 @@ def boss_print_report(request):
     return render(request, 'boss.html', locals())
 
 
+# 对外服务接口
+# @accept_websocket
+# def websocket(request):
+#     if request.is_websocket():
+#         message = bytes.decode(request.websocket.wait())  # string
+#         info = json.loads(message)  # json
+#
+#
+#
+#         request.websocket.send(msg.encode())
+#     else:
+#         return HttpResponse("error")
