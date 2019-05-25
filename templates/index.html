@@ -9,9 +9,9 @@
 <link href='http://fonts.googleapis.com/css?family=Pontano+Sans' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=Shadows+Into+Light' rel='stylesheet' type='text/css'>
 <!-- end google fonts -->
-<link href="./css/style.css" rel="stylesheet" type="text/css" media="all" />
+<link href="/static/css/style.css" rel="stylesheet" type="text/css" media="all" />
 <!--nav-->
-<script src="./js/jquery.min.js"></script>
+<script src="/static/js/jquery.min.js"></script>
 <style>
       a:link {color:#000000;}      /* 未访问链接*/
     a:visited {color:#FF00FF;}  /* 已访问链接 */
@@ -46,14 +46,14 @@
 	<!-- start header-->
 	<div class="header">
 		<div class="logo">
-			<a href="index.html"><img src="./images/logo.png" alt=""></a>
+			<a href="{% url 'index' %}"><img src="/static/images/logo.png" alt=""></a>
 		</div>
 		<div class="cssmenu">
 			<ul>
-			  	<li class="active"><a href="index.html">后台管理功能介绍</a></li>
-				<li><a href="reception.html">前台</a></li>
-				<li><a href="boss.html">经理</a></li>
-				<li ><a href="manager.html">管理员</a></li>
+			  	<li class="active"><a href="{% url 'index' %}">后台管理功能介绍</a></li>
+				<li><a href="{% url 'reception' %}">前台</a></li>
+				<li><a href="{% url 'boss' %}">经理</a></li>
+				<li ><a href="{% url 'manager' %}">管理员</a></li>
 				<div class="clear"></div>
 			 </ul>
 		</div>
