@@ -58,23 +58,18 @@
     <!-- start content -->
 	 <div class="main1">
 	 	<div class="content">
-	 	 	<h2>请输入房间号：
-	 	 		<input id="room_id" type="text" >
-                <input type="submit" id="btn" value="查询" class="btn btn-info" onclick="show()" method="post">
-                <script>    
-                	function show()   
-                	{        
-                		var objroom_id = document.getElementById("room_id");
-                        if(objroom_id!=null&&objroom_id.value=="") {
+        <h2>
+            <form class="form-horizontal" action="/reception" method="post">{%  csrf_token %}
+              <div class="form-group">
+                 <label for="room_id">房间号</label>
+                  <input  type="text" id="room_id" placeholder="请输入房间号">
 
-                        }
-                        alert("房间号不能为空！");
-                        objUserName.focus();
-                        return false;
-                    }
-                </script>
-            </h2>
-	 	 </div> 
+                  <input type="submit" class="btn btn-info" value="提交">
+
+              </div>
+            </form>
+        </h2>
+        </div>
 
 	 	 <div class="containter">
 	 	 	
