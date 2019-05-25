@@ -12,9 +12,9 @@
 <link href='http://fonts.googleapis.com/css?family=Pontano+Sans' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=Shadows+Into+Light' rel='stylesheet' type='text/css'>
 <!-- end google fonts -->
-<link href="./css/style.css" rel="stylesheet" type="text/css" media="all" />
+<link href="/static/css/style.css" rel="stylesheet" type="text/css" media="all" />
 <!--nav-->
-<script src="./js/jquery.min.js"></script>
+<script src="/static/js/jquery.min.js"></script>
 <style>
       a:link {color:#000000;}      /* 未访问链接*/
     a:visited {color:#FF00FF;}  /* 已访问链接 */
@@ -46,14 +46,14 @@
     <!-- start header-->
     <div class="header">
         <div class="logo">
-            <a href="index.html"><img src="./images/logo.png" alt=""></a>
+            <a href="{% url 'index' %}"><img src="/static/images/logo.png" alt=""></a>
         </div>
         <div class="cssmenu">
             <ul>
-                <li><a href="index.html">后台管理功能介绍</a></li>
-                <li><a href="reception.html">前台</a></li>
-                <li><a href="boss.html">经理</a></li>
-                <li class="active"><a href="manager.html">管理员</a></li>
+                <li><a href="{% url 'index' %}">后台管理功能介绍</a></li>
+                <li><a href="{% url 'reception' %}">前台</a></li>
+                <li><a href="{% url 'boss' %}">经理</a></li>
+                <li class="active"><a href="{% url 'manager' %}l">管理员</a></li>
                 <div class="clear"></div>
              </ul>
         </div>
@@ -70,7 +70,7 @@
 
           <h3 style="text-align:center",><span class="badge badge-info">中央空调参数设定</span></h3>
 
-            <form class="form-horizontal" action="." method="post">
+            <form class="form-horizontal" action="/manager_set_para" method="post">{%  csrf_token %}
               <div class="form-group">
                  <label for="mode">模式</label>
                     <select class="form-control" id="mode">
@@ -81,22 +81,22 @@
 
               <div class="form-group">
                  <label for="Temp_highLimit">最高温度:</label>
-                    <input  type="text" class="form-control" id="{{ Temp_highLimit }}" placeholder="请输入最高温度">
+                    <input  type="text" class="form-control" id="Temp_highLimit " placeholder="请输入最高温度">
               </div>
 
               <div class="form-group">
                  <label for="Temp_lowLimit">最低温度:</label>
-                    <input  type="text" class="form-control" id="{{ Temp_lowLimit }}" placeholder="请输入最高温度">
+                    <input  type="text" class="form-control" id="Temp_lowLimit " placeholder="请输入最高温度">
               </div>
 
               <div class="form-group">
                  <label for="default_TargetTemp ">目标温度:</label>
-                    <input  type="text" class="form-control" id="{{ default_TargetTemp }}" placeholder="请输入目标温度">
+                    <input  type="text" class="form-control" id="default_TargetTemp" placeholder="请输入目标温度">
               </div>
 
               <div class="form-group">
                  <label for="FeeRate">费率</label>
-                    <select class="form-control" id="{{ FeeRate }}">
+                    <select class="form-control" id="FeeRate">
                                <option value="FeeRate_H">高</option>
                                <option value="FeeRate_M">中</option>
                                <option value="FeeRate_L">低</option>

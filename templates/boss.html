@@ -12,9 +12,9 @@
 <link href='http://fonts.googleapis.com/css?family=Pontano+Sans' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=Shadows+Into+Light' rel='stylesheet' type='text/css'>
 <!-- end google fonts -->
-<link href="./css/style.css" rel="stylesheet" type="text/css" media="all" />
+<link href="/static/css/style.css" rel="stylesheet" type="text/css" media="all" />
 <!--nav-->
-<script src="./js/jquery.min.js"></script>
+<script src="/static/js/jquery.min.js"></script>
 <style>
 	  a:link {color:#000000;}      /* 未访问链接*/
     a:visited {color:#FF00FF;}  /* 已访问链接 */
@@ -46,14 +46,14 @@
 	<!-- start header-->
 	<div class="header">
 		<div class="logo">
-			<a href="index.html"><img src="./images/logo.png" alt=""></a>
+			<a href="{% url 'index' %}"><img src="/static/images/logo.png" alt=""></a>
 		</div>
 		<div class="cssmenu">
 			<ul>
-			  	<li><a href="index.html">后台管理功能介绍</a></li>
-				<li><a href="reception.html">前台</a></li>
-				<li class="active"><a href="boss.html">经理</a></li>
-				<li class="has-sub"><a href="manager.html">管理员</a></li>
+			  	<li><a href="{% url 'index' %}">后台管理功能介绍</a></li>
+				<li><a href="{% url 'reception' %}">前台</a></li>
+				<li class="active"><a href="{% url 'boss' %}">经理</a></li>
+				<li class="has-sub"><a href="{% url 'manager' %}">管理员</a></li>
 				<div class="clear"></div>
 			 </ul>
 		</div>
@@ -67,42 +67,42 @@
 	   </div>
 
      <div class="container">
-      {% for room in Room %} 
+      {% for i in room %}
     	 <h3 style="text-align:center",id={{ room_id }}><span class="badge badge-info">房间 {{ room_id }}</span></h3>
          <table class="table table-striped table-bordered">
           	<tr>
           		<td><b>开关次数</b></td>
-          		<td>{{ times_of_on_and_off }}</td>
+          		<td>{{ i.times_of_on_and_off }}</td>
           	</tr>
 
           	<tr>
           		<td><b>使用时长</b></td>
-          		<td>{{ serving_duration }}</td>
+          		<td>{{ i.serving_duration }}</td>
           	</tr>
 
           	<tr>
           		<td><b>总费用</b></td>
-          		<td>{{ total_Fee }}</td>
+          		<td>{{ i.total_Fee }}</td>
           	</tr>
 
           	<tr>
           		<td><b>调度次数</b></td>
-          		<td>{{ times_of_dispatch }}</td>
+          		<td>{{ i.times_of_dispatch }}</td>
           	</tr>
 
           	<tr>
           		<td><b>详单数</b></td>
-          		<td>{{ number_of_RDR }}</td>
+          		<td>{{ i.number_of_RDR }}</td>
           	</tr>
 
           	<tr>
           		<td><b>调温次数</b></td>
-          		<td>{{ times_of_changeTemp }}</td>
+          		<td>{{ i.times_of_changeTemp }}</td>
           	</tr>
 
           	<tr>
           		<td><b>调风次数</b></td>
-          		<td>{{ times_of_changeFanSpeed }}</td>
+          		<td>{{ i.times_of_changeFanSpeed }}</td>
           	</tr>
         </table>
       {% endfor %}
