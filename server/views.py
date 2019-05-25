@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from django.http import HttpResponseRedirect,HttpResponse
+from server.forms import ParaModelForm
 from .models import *
 
 
@@ -33,17 +35,37 @@ def manager(request):
     return render(request, 'manager.html', locals())
 
 
+# 设置空调参数
 def manager_set_para(request):
-    return render(request, 'manager_set_para.html', locals())
+    if request.method == 'post':
+        form = ParaModelForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect("/manager")
+    else:
+        form = ParaModelForm()
+        return render(request, 'manager_set_para.html', {'form': form})
 
 
+# 定时检查状态
 def manager_check_state(request):
-    return render(request, 'manager_check_state.html', locals())
+    room = Room.objects.all()
+    return render(request, 'manager_check_state.html', {'room': room})
 
 
 # 经理
 def boss(request):
     return render(request, 'boss.html', locals())
 
+
+# 查看周报
+def boss_report(request):
+    report = Report.objects.all()
+    return render(request, 'boss.html', {'report': report})
+
+
+# 打印报表
+def boss_print_report(request):
+    return render(request, 'boss.html', locals())
 
 
