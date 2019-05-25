@@ -70,10 +70,10 @@
 
           <h3 style="text-align:center",><span class="badge badge-info">中央空调参数设定</span></h3>
 
-            <form class="form-horizontal" action="/manager_set_para" method="post">{%  csrf_token %}
+            <form class="form-horizontal" action="/server/manager_set_para/" method="post">{%  csrf_token %}
               <div class="form-group">
                  <label for="mode">模式</label>
-                    <select class="form-control" id="mode">
+                    <select class="form-control" id="id_mode">
                                <option value="0">制冷</option>
                                <option valie="1">制热</option>
                     </select>   
@@ -94,14 +94,19 @@
                     <input  type="text" class="form-control" id="default_TargetTemp" placeholder="请输入目标温度">
               </div>
 
-              <div class="form-group">
-                 <label for="FeeRate">费率</label>
-                    <select class="form-control" id="FeeRate">
-                               <option value="FeeRate_H">高</option>
-                               <option value="FeeRate_M">中</option>
-                               <option value="FeeRate_L">低</option>
-                    </select>   
-              </div>
+                <div class="form-group">
+                    <label for="FeeRate_H">高速风费率:</label>
+                    <input type="text" class="form-control" id="FeeRate_H" placeholder="请输入费率">
+                </div>
+                <div class="form-group">
+                    <label for="FeeRate_M ">中速风费率:</label>
+                    <input type="text" class="form-control" id="FeeRate_M" placeholder="请输入费率">
+                </div>
+                <div class="form-group">
+                    <label for="FeeRate_L ">低速风费率:</label>
+                    <input type="text" class="form-control" id="FeeRate_L" placeholder="请输入费率">
+                </div>
+
 
               <div align="center" style="position:relative;top:10px">
                 <input type="submit" class="btn btn-info" value="提交">

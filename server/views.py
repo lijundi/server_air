@@ -37,15 +37,19 @@ def manager(request):
 
 # 设置空调参数
 def manager_set_para(request):
-    if request.method == 'post':
-        form = ParaModelForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect("/manager")
+    if request.method == 'POST':
+        WP = WorkingParameter.objects.all()[0]
+        WP.mode = request.POST['mode']
+        WP.Temp_highLimit = request.POST['Temp_highLimit']
+        WP.Temp_lowLimit = request.POST['Temp_lowLimit']
+        WP.default_TargetTemp = request.POST['default_TargetTemp']
+        WP.FeeRate_H = request.POST['FeeRate_H']
+        WP.FeeRate_M = request.POST['FeeRate_M']
+        WP.FeeRate_L = request.POST['FeeRate_L']
+        WP.save()
+        return HttpResponseRedirect("/manager")
     else:
-        form = ParaModelForm()
-        return render(request, 'manager_set_para.html', {'form': form})
-
+        return render(request, 'manager_set_para.html')
 
 # 定时检查状态
 def manager_check_state(request):
