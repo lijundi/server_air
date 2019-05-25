@@ -66,6 +66,7 @@ def boss_report(request):
 
 # 打印报表
 def boss_print_report(request):
+    print(1)
     return render(request, 'boss.html', locals())
 
 
