@@ -2,7 +2,6 @@ import json
 
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
-from server.forms import ParaModelForm
 from dwebsocket.decorators import accept_websocket
 from .models import *
 
@@ -37,15 +36,16 @@ def manager(request):
 def manager_set_para(request):
     if request.method == 'POST':
         WP = WorkingParameter.objects.all()[0]
-        WP.mode = request.POST['mode']
-        WP.Temp_highLimit = request.POST['Temp_highLimit']
-        WP.Temp_lowLimit = request.POST['Temp_lowLimit']
-        WP.default_TargetTemp = request.POST['default_TargetTemp']
-        WP.FeeRate_H = request.POST['FeeRate_H']
-        WP.FeeRate_M = request.POST['FeeRate_M']
-        WP.FeeRate_L = request.POST['FeeRate_L']
+        str =request.POST.get('mode')
+        WP.mode =int(str)
+        WP.Temp_highLimit = int(request.POST.get('Temp_highLimit'))
+        WP.Temp_lowLimit = int(request.POST.get('Temp_lowLimit'))
+        WP.default_TargetTemp = int(request.POST.get('default_TargetTemp'))
+        WP.FeeRate_H = request.POST.get('FeeRate_H')
+        WP.FeeRate_M = request.POST.get('FeeRate_M')
+        WP.FeeRate_L = request.POST.get('FeeRate_L')
         WP.save()
-        return HttpResponseRedirect("/manager")
+        return HttpResponseRedirect("/server/manager/")
     else:
         return render(request, 'manager_set_para.html')
 

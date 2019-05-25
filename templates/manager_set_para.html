@@ -73,38 +73,35 @@
             <form class="form-horizontal" action="/server/manager_set_para/" method="post">{%  csrf_token %}
               <div class="form-group">
                  <label for="mode">模式</label>
-                    <select class="form-control" id="id_mode">
-                               <option value="0">制冷</option>
-                               <option valie="1">制热</option>
-                    </select>   
+                   <input  type="text" class="form-control" name="mode" placeholder="制热：1，制冷：0">
               </div>
 
               <div class="form-group">
                  <label for="Temp_highLimit">最高温度:</label>
-                    <input  type="text" class="form-control" id="Temp_highLimit " placeholder="请输入最高温度">
+                    <input  type="text" class="form-control" name="Temp_highLimit" placeholder="请输入最高温度">
               </div>
 
               <div class="form-group">
                  <label for="Temp_lowLimit">最低温度:</label>
-                    <input  type="text" class="form-control" id="Temp_lowLimit " placeholder="请输入最高温度">
+                    <input  type="text" class="form-control" name="Temp_lowLimit" placeholder="请输入最高温度">
               </div>
 
               <div class="form-group">
                  <label for="default_TargetTemp ">目标温度:</label>
-                    <input  type="text" class="form-control" id="default_TargetTemp" placeholder="请输入目标温度">
+                    <input  type="text" class="form-control" name="default_TargetTemp" placeholder="请输入目标温度">
               </div>
 
                 <div class="form-group">
                     <label for="FeeRate_H">高速风费率:</label>
-                    <input type="text" class="form-control" id="FeeRate_H" placeholder="请输入费率">
+                    <input type="text" class="form-control" name="FeeRate_H" placeholder="请输入费率">
                 </div>
                 <div class="form-group">
                     <label for="FeeRate_M ">中速风费率:</label>
-                    <input type="text" class="form-control" id="FeeRate_M" placeholder="请输入费率">
+                    <input type="text" class="form-control" name="FeeRate_M" placeholder="请输入费率">
                 </div>
                 <div class="form-group">
                     <label for="FeeRate_L ">低速风费率:</label>
-                    <input type="text" class="form-control" id="FeeRate_L" placeholder="请输入费率">
+                    <input type="text" class="form-control" name="FeeRate_L" placeholder="请输入费率">
                 </div>
 
 
