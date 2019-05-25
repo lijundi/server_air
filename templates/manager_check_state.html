@@ -66,42 +66,42 @@
             <h2>查看空调状态</h2>
        </div>
 
-         {% for room in Room %} 
-         <h3 style="text-align:center",id={{ room_id }}><span class="badge badge-info">房间 {{ room_id }}</span></h3>
+         {% for r in room %}
+         <h3 style="text-align:center",id={{ r.room_id }}><span class="badge badge-info">房间 {{ r.room_id }}</span></h3>
          <table class="table table-striped table-bordered">
             <tr>
                 <td><b>当前状态</b></td>
-                <td>{{ states }}</td>
+                <td>{{ r.states }}</td>
             </tr>
 
             <tr>
                 <td><b>当前室温</b></td>
-                <td>{{ current_temp }}</td>
+                <td>{{ r.current_temp }}</td>
             </tr>
 
             <tr>
                 <td><b>目标温度</b></td>
-                <td>{{ target_temp }}</td>
+                <td>{{ r.target_temp }}</td>
             </tr>
 
             <tr>
                 <td><b>风速</b></td>
-                <td>{{ fan_speed }}</td>
+                <td>{{ r.fan_speed }}</td>
             </tr>
 
             <tr>
                 <td><b>费率</b></td>
-                <td>{{ fee_rate }}</td>
+                <td>{{ r.fee_rate }}</td>
             </tr>
 
             <tr>
                 <td><b>费用</b></td>
-                <td>{{ fee }}</td>
+                <td>{{ r.fee }}</td>
             </tr>
 
             <tr>
                 <td><b>服务时长</b></td>
-                <td>{{ serving_duration }}</td>
+                <td>{{ r.serving_duration }}</td>
             </tr>
         </table>
       {% endfor %}

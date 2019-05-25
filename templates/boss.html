@@ -67,8 +67,8 @@
 	   </div>
 
      <div class="container">
-      {% for i in room %}
-    	 <h3 style="text-align:center",id={{ room_id }}><span class="badge badge-info">房间 {{ room_id }}</span></h3>
+      {% for i in report %}
+    	 <h3 style="text-align:center" id={{ i.room_id }}><span class="badge badge-info">房间 {{ i.room_id }}</span></h3>
          <table class="table table-striped table-bordered">
           	<tr>
           		<td><b>开关次数</b></td>

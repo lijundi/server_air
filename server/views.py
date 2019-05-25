@@ -53,11 +53,6 @@ def manager_check_state(request):
 
 # 经理
 def boss(request):
-    return render(request, 'boss.html', locals())
-
-
-# 查看周报
-def boss_report(request):
     report = Report.objects.all()
     return render(request, 'boss.html', {'report': report})
 
