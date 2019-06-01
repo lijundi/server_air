@@ -12,6 +12,7 @@ class Basic(models.Model):
         abstract = True
 
 
+
 # 房间类
 class Room(Basic):
     room_id = models.IntegerField(primary_key=True)
@@ -21,6 +22,9 @@ class Room(Basic):
     current_temp = models.IntegerField(default=25)
     target_temp = models.IntegerField(default=25)
     serving_duration = models.IntegerField(default=0)
+    last_serving_time = models.DateField.DateTimeField()#default要不要给个值？
+    is_timer = models.BooleanField(default=False)
+
 
 
 # 详单类
