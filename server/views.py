@@ -3,6 +3,9 @@ from django.http import HttpResponseRedirect, HttpResponse
 from .models import *
 from apscheduler.schedulers.background import BackgroundScheduler
 from django_apscheduler.jobstores import DjangoJobStore, register_events, register_job
+from channels.layers import get_channel_layer
+import datetime
+import json
 
 
 # 开启定时工作
@@ -13,10 +16,25 @@ try:
 
     @register_job(scheduler, "interval", seconds=10)
     def send_cost():
-        # 这里写你要执行的任务
-        # room_list = Room.objects.all()
-        # for room in room_list:
-
+        # 计算各房间费用并返回
+        room_list = Room.objects.all()
+        for room in room_list:
+            # 计算详单的总费用
+            RDR_list = RequestDetailRecords.objects.filter(room_id=room.room_id)
+            total = 0
+            for record in RDR_list:
+                total += record.fee
+            # 计算正在服务的费用
+            if room.state_serving or room.state_waiting:
+                time = (datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') - room.last_serving_time).total_seconds()
+                total += time * room.fee_rate  # 按秒算费用
+            room.fee = total
+            channel_layer = get_channel_layer()
+            channel_layer.send(room.channel_name, json.dumps({'cost': total}))
+            report = Report.objects.get(room_id=room.room_id)
+            report.total_Fee = total
+            report.save()
+            room.save()
         pass
 
     register_events(scheduler)
@@ -48,6 +66,12 @@ def get_records_and_invoice(request):
     return render(request, 'reception.html')
 
 
+# 打印详单、账单
+def reception_print_records_and_invoice(request):
+    print(1)
+    return render(request, 'reception.html', locals())
+
+
 # 管理员
 def manager(request):
     return render(request, 'manager.html', locals())
@@ -57,14 +81,17 @@ def manager(request):
 def manager_set_para(request):
     if request.method == 'POST':
         WP = WorkingParameter.objects.all()[0]
-        str = request.POST.get('mode')
-        WP.mode = int(str)
+        WP.mode = int(request.POST.get('mode'))
         WP.Temp_highLimit = int(request.POST.get('Temp_highLimit'))
         WP.Temp_lowLimit = int(request.POST.get('Temp_lowLimit'))
         WP.default_TargetTemp = int(request.POST.get('default_TargetTemp'))
         WP.FeeRate_H = request.POST.get('FeeRate_H')
         WP.FeeRate_M = request.POST.get('FeeRate_M')
         WP.FeeRate_L = request.POST.get('FeeRate_L')
+        WP.lowfan_change_temp = request.POST.get('lowfan_change_temp')
+        WP.medfan_change_temp = request.POST.get('medfan_change_temp')
+        WP.highfan_change_temp = request.POST.get('highfan_change_temp')
+        WP.fan = request.POST.get('fan')
         WP.save()
         return HttpResponseRedirect("/server/manager/")
     else:

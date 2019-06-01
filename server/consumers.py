@@ -24,19 +24,19 @@ class AirConsumer(WebsocketConsumer):
                                 'lowfan_change_temp': wp.lowfan_change_temp,
                                 'medfan_change_temp': wp.medfan_change_temp,
                                 'fan': wp.fan}}
-            dic2 = m_poweron(info['poweron']['room_id'], info['poweron']['cur_temp'], self.channel_name)
-            dic3 = temp_update(info['poweron']['room_id'], info['poweron']['cur_temp'])
             self.send(json.dumps(dic1))
-            self.send(json.dumps(dic2))
+            m_poweron(info['poweron']['room_id'], info['poweron']['cur_temp'], self.channel_name)
+            dic3 = temp_update(info['poweron']['room_id'], info['poweron']['cur_temp'])
+            # self.send(json.dumps(dic2))
             if not dic3:
                 self.send(json.dumps(dic3))
         elif "poweroff" in info:
             dic = m_poweroff(info['poweroff']['room_id'])
             self.send(json.dumps(dic))
         elif "config" in info:
-            dic1 = m_config(info['config']['room_id'], info['config']['fan'], info['config']['target_temp'])
             self.send(json.dumps({'config': 'ok'}))
-            self.send(json.dumps(dic1))
+            m_config(info['config']['room_id'], info['config']['fan'], info['config']['target_temp'])
+            # self.send(json.dumps(dic1))
         elif "temp_update" in info:
             dic = temp_update(info['temp_update']['room_id'], info['temp_update']['cur_temp'])
             if not dic:

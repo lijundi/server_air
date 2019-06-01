@@ -1,6 +1,8 @@
 from .models import *
+from channels.layers import get_channel_layer
 import threading
 import datetime
+import json
 
 serving_count = 3
 waiting_count = 1
@@ -16,6 +18,8 @@ def set_waiting_to_serving(room):
     room.state_waiting = False
     room.last_serving_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     room.is_timer = False
+    channel_layer = get_channel_layer()
+    channel_layer.send(room.channel_name, json.dumps({'poweron': 'ok'}))
     room.save()
 
 
@@ -25,6 +29,8 @@ def set_serving_to_waiting(room):
     room.serving_duration += (
                 datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') - room.last_serving_time).total_seconds()
     room.is_timer = True
+    channel_layer = get_channel_layer()
+    channel_layer.send(room.channel_name, json.dumps({'poweron': 'busy'}))
     room.save()
 
 
@@ -86,18 +92,24 @@ def m_poweron(room_id, cur_temp, channel_name):
     wp = WorkingParameter.objects.all()[0]
     room.target_temp = wp.default_TargetTemp
     room.fan_speed = wp.fan
+    if room.fan_speed == 0:
+        room.fee_rate = wp.FeeRate_L
+    elif room.fan_speed == 1:
+        room.fee_rate = wp.FeeRate_M
+    else:
+        room.fee_rate = wp.FeeRate_H
     room.state_working = True
     room.state_waiting = True
     room.current_temp = cur_temp
     room.channel_name = channel_name
     room.save()
     scheduling()
-    # 返回信息
-    room = Room.objects.get(room_id=room_id)
-    if True == room.state_serving and False == room.state_waiting:
-        return {'poweron': 'ok'}
-    else:
-        return {'poweron': 'busy'}
+    # 返回信息 好像不用发两次
+    # room = Room.objects.get(room_id=room_id)
+    # if True == room.state_serving and False == room.state_waiting:
+    #     return {'poweron': 'ok'}
+    # else:
+    #     return {'poweron': 'busy'}
 
 
 def m_poweroff(room_id):
@@ -117,16 +129,23 @@ def m_poweroff(room_id):
 
 def m_config(room_id, fan, target_temp):
     room = Room.objects.get(room_id=room_id)
+    wp = WorkingParameter.objects.all()[0]
     room.fan_speed = fan
+    if room.fan_speed == 0:
+        room.fee_rate = wp.FeeRate_L
+    elif room.fan_speed == 1:
+        room.fee_rate = wp.FeeRate_M
+    else:
+        room.fee_rate = wp.FeeRate_H
     room.target_temp = target_temp
     room.save()
     scheduling()
-    # 返回信息
-    room = Room.objects.get(room_id=room_id)
-    if True == room.state_serving and False == room.state_waiting:
-        return {'poweron': 'ok'}
-    else:
-        return {'poweron': 'busy'}
+    # 返回信息 好像不用发两次
+    # room = Room.objects.get(room_id=room_id)
+    # if True == room.state_serving and False == room.state_waiting:
+    #     return {'poweron': 'ok'}
+    # else:
+    #     return {'poweron': 'busy'}
 
 
 def temp_update(room_id, cur_temp):
