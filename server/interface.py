@@ -31,7 +31,7 @@ def set_serving_to_waiting(room):
 def waiting_timer(room_id):
     room = Room.objects.get(room_id=room_id)
     # 判断他当前是否已经在服务队列中
-    if False == room.state_serving:
+    if room.state_waiting:
         set_waiting_to_serving(room)
         # 将服务时长最长的房间调入等待队列
         serving_list = Room.objects.filter(state_working=True, state_waiting=False, state_serving=True).order_by(
@@ -83,6 +83,9 @@ def scheduling():
 
 def m_poweron(room_id, cur_temp, channel_name):
     room = Room.objects.get(room_id=room_id)
+    wp = WorkingParameter.objects.all()[0]
+    room.target_temp = wp.default_TargetTemp
+    room.fan_speed = wp.fan
     room.state_working = True
     room.state_waiting = True
     room.current_temp = cur_temp
@@ -120,17 +123,18 @@ def m_config(room_id, fan, target_temp):
     scheduling()
     # 返回信息
     room = Room.objects.get(room_id=room_id)
-    if fan == room.fan_speed and target_temp == room.target_temp:
-        return {'config': 'ok'}
+    if True == room.state_serving and False == room.state_waiting:
+        return {'poweron': 'ok'}
     else:
-        return {'config': 'fail'}
+        return {'poweron': 'busy'}
 
 
 def temp_update(room_id, cur_temp):
     room = Room.objects.get(room_id=room_id)
     room.current_temp = cur_temp
     # 当前温度达到目标温度时，room的状态从服务变为服务饱和,调整服务队列
-    if cur_temp == room.target_temp:
+    wp = WorkingParameter.objects.all()[0]
+    if (cur_temp <= room.target_temp) and (wp.mode == 0) or (cur_temp >= room.target_temp) and (wp.mode == 1):
         room.state_serving = False
         room.serving_duration += (
                 datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') - room.last_serving_time).total_seconds()
@@ -142,3 +146,4 @@ def temp_update(room_id, cur_temp):
         room.state_waiting = True
         room.save()
         scheduling()
+    return {}

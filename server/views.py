@@ -16,7 +16,7 @@ try:
         # 这里写你要执行的任务
         # room_list = Room.objects.all()
         # for room in room_list:
-        #
+
         pass
 
     register_events(scheduler)
