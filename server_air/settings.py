@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'server.apps.ServerConfig',
     'temperature.apps.TemperatureConfig',
     'channels',
+    'django_apscheduler',
 ]
 
 MIDDLEWARE = [

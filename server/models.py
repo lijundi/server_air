@@ -21,6 +21,7 @@ class Room(Basic):
     current_temp = models.IntegerField(default=25)
     target_temp = models.IntegerField(default=25)
     serving_duration = models.IntegerField(default=0)
+    channel_name = models.CharField(max_length=100, default='')
 
 
 # 详单类

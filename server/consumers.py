@@ -1,5 +1,5 @@
-from .models import *
 from channels.generic.websocket import WebsocketConsumer
+from server.interface import *
 import json
 
 
@@ -14,13 +14,15 @@ class AirConsumer(WebsocketConsumer):
         info = json.loads(text_data)
 
         if "poweron" in info:
-            print(1)
+            dic = m_poweron(info['poweron']['room_id'], info['poweron']['cur_temp'], self.channel_name)
         elif "poweroff" in info:
-            print(1)
+            dic = m_poweroff(info['poweroff']['room_id'])
         elif "config" in info:
-            print(1)
+            dic = m_config(info['config']['room_id'], info['config']['fan'], info['config']['target_temp'])
         elif "temp_update" in info:
-            print(1)
+            dic = temp_update(info['temp_update']['room_id'], info['temp_update']['cur_temp'])
+        else:
+            dic = {}
 
-        msg = json.dumps({})
+        msg = json.dumps(dic)
         self.send(msg)

@@ -68,11 +68,12 @@ def scheduling():
             i += 1
 
 
-def m_poweron(room_id, cur_temp):
+def m_poweron(room_id, cur_temp, channel_name):
     room = Room.objects.get(room_id=room_id)
     room.state_working = True
     room.state_waiting = True
     room.current_temp = cur_temp
+    room.channel_name = channel_name
     room.save()
     scheduling()
     # 返回信息

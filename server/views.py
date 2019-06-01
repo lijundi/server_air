@@ -1,6 +1,30 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from .models import *
+from apscheduler.schedulers.background import BackgroundScheduler
+from django_apscheduler.jobstores import DjangoJobStore, register_events, register_job
+
+
+# 开启定时工作
+scheduler = BackgroundScheduler()  # 实例化调度器
+try:
+    # 调度器使用DjangoJobStore()
+    scheduler.add_jobstore(DjangoJobStore(), "default")
+
+    @register_job(scheduler, "interval", seconds=10)
+    def send_cost():
+        # 这里写你要执行的任务
+        # room_list = Room.objects.all()
+        # for room in room_list:
+        #
+        pass
+
+    register_events(scheduler)
+    scheduler.start()
+except Exception as e:
+    print(e)
+    # 有错误就停止定时器
+    scheduler.shutdown()
 
 
 # Create your views here.
