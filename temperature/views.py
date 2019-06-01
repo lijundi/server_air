@@ -2,7 +2,7 @@ import datetime
 import json
 
 from django.shortcuts import HttpResponse
-from dwebsocket.decorators import accept_websocket
+from dwebsocket.decorators import accept_websocket, require_websocket
 from .models import *
 
 

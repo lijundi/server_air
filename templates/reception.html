@@ -59,10 +59,10 @@
 	 <div class="main1">
 	 	<div class="content">
         <h2>
-            <form class="form-horizontal" action="/reception" method="post">{%  csrf_token %}
+            <form class="form-horizontal" action="/server/get_records_and_invoice/" method="post">{%  csrf_token %}
               <div class="form-group">
                  <label for="room_id">房间号</label>
-                  <input  type="text" id="room_id" placeholder="请输入房间号">
+                  <input  type="text" name="room_id" placeholder="请输入房间号">
 
                   <input type="submit" class="btn btn-info" value="提交">
 
@@ -105,22 +105,12 @@
             <table class="table table-striped table-bordered">
             	    <tr>
           		        <td><b>房间号</b></td>
-          		        <td>{{ RoomId }}</td>
+          		        <td>{{ room_id }}</td>
           	        </tr>
 
           	        <tr>
           		        <td><b>总费用</b></td>
-          		        <td>{{ Total_Fee }}</td>
-          	        </tr>
-
-          	        <tr>
-          		        <td><b>入住时间</b></td>
-          		        <td>{{ data_in }}</th>
-          	        </tr>
-
-          	        <tr>
-          		        <td><b>离店时间</b></td>
-          		        <td>{{ data_out }}</td>
+          		        <td>{{ total_fee }}</td>
           	        </tr>
             </table>
 

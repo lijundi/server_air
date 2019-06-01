@@ -1,8 +1,5 @@
-import json
-
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
-from dwebsocket.decorators import accept_websocket
 from .models import *
 
 
@@ -17,14 +14,14 @@ def reception(request):
 
 
 def get_records_and_invoice(request):
-    if request.method == 'post':
-        room_id = request.POST['room_id']
-        records = RequestDetailRecords.objects.filter(room_id=room_id).order_by('request_time')
-        report = Report.objects.get(room_id=room_id)
-        total_fee = report.total_Fee
-        return render(request, 'reception.html', {'records': records, 'total_fee': total_fee})
-    else:
-        return render(request, 'reception.html')
+    if request.method == 'POST':
+        room_id = request.POST.get('room_id')
+        if room_id:
+            records = RequestDetailRecords.objects.filter(room_id=room_id).order_by('request_time')
+            report = Report.objects.get(room_id=room_id)
+            total_fee = report.total_Fee
+            return render(request, 'reception.html', {'records': records, 'total_fee': total_fee, 'room_id': room_id})
+    return render(request, 'reception.html')
 
 
 # 管理员
@@ -36,8 +33,8 @@ def manager(request):
 def manager_set_para(request):
     if request.method == 'POST':
         WP = WorkingParameter.objects.all()[0]
-        str =request.POST.get('mode')
-        WP.mode =int(str)
+        str = request.POST.get('mode')
+        WP.mode = int(str)
         WP.Temp_highLimit = int(request.POST.get('Temp_highLimit'))
         WP.Temp_lowLimit = int(request.POST.get('Temp_lowLimit'))
         WP.default_TargetTemp = int(request.POST.get('default_TargetTemp'))
@@ -48,6 +45,7 @@ def manager_set_para(request):
         return HttpResponseRedirect("/server/manager/")
     else:
         return render(request, 'manager_set_para.html')
+
 
 # 定时检查状态
 def manager_check_state(request):
@@ -67,15 +65,4 @@ def boss_print_report(request):
     return render(request, 'boss.html', locals())
 
 
-# 对外服务接口
-# @accept_websocket
-# def websocket(request):
-#     if request.is_websocket():
-#         message = bytes.decode(request.websocket.wait())  # string
-#         info = json.loads(message)  # json
-#
-#
-#
-#         request.websocket.send(msg.encode())
-#     else:
-#         return HttpResponse("error")
+

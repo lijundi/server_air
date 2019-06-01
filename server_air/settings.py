@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'server.apps.ServerConfig',
     'temperature.apps.TemperatureConfig',
-    # 'dwebsocket',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -50,10 +50,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'dwebsocket.middleware.WebSocketMiddleware',  # 为所有的URL提供websocket，如果只是单独的视图需要可以不选
 ]
-
-WEBSOCKET_ACCEPT_ALL = True   # 可以允许每一个单独的视图实用websockets
 
 ROOT_URLCONF = 'server_air.urls'
 
@@ -129,3 +126,4 @@ STATICFILES_DIRS = (
      os.path.join(BASE_DIR, 'server/static').replace('\\', '/'),
 )
 
+ASGI_APPLICATION = "server_air.routing.application"
