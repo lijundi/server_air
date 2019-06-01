@@ -20,8 +20,10 @@ class Room(Basic):
     state_waiting = models.BooleanField(default=False)
     current_temp = models.IntegerField(default=25)
     target_temp = models.IntegerField(default=25)
-    serving_duration = models.IntegerField(default=0)
+    serving_duration = models.FloatField(default=0)
     channel_name = models.CharField(max_length=100, default='')
+    last_serving_time = models.DateTimeField()
+    is_timer = models.BooleanField(default=False)
 
 
 # 详单类
