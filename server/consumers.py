@@ -1,4 +1,5 @@
 from channels.generic.websocket import WebsocketConsumer
+from asgiref.sync import async_to_sync
 from server.interface import *
 from .models import *
 import json
@@ -9,6 +10,10 @@ class AirConsumer(WebsocketConsumer):
         self.accept()
 
     def disconnect(self, close_code):
+        room_list = Room.objects.filter(channel_name=self.channel_name)
+        for room in room_list:
+            room.channel_name = ''
+            room.save()
         pass
 
     def receive(self, text_data):
@@ -27,9 +32,10 @@ class AirConsumer(WebsocketConsumer):
             self.send(json.dumps(dic1))
             m_poweron(info['poweron']['room_id'], info['poweron']['cur_temp'], self.channel_name)
             dic3 = temp_update(info['poweron']['room_id'], info['poweron']['cur_temp'])
-            # self.send(json.dumps(dic2))
-            if not dic3:
+            if dic3:
                 self.send(json.dumps(dic3))
+            # self.send(json.dumps({'poweron': 'ok'}))
+            # self.send(json.dumps({'finish': ''}))
         elif "poweroff" in info:
             dic = m_poweroff(info['poweroff']['room_id'])
             self.send(json.dumps(dic))
@@ -39,5 +45,9 @@ class AirConsumer(WebsocketConsumer):
             # self.send(json.dumps(dic1))
         elif "temp_update" in info:
             dic = temp_update(info['temp_update']['room_id'], info['temp_update']['cur_temp'])
-            if not dic:
+            if dic:
                 self.send(json.dumps(dic))
+
+    def chat_message(self, event):
+        # 主动发送消息
+        self.send(text_data=json.dumps(event['text']))

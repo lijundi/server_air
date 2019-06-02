@@ -4,7 +4,8 @@ from .models import *
 from apscheduler.schedulers.background import BackgroundScheduler
 from django_apscheduler.jobstores import DjangoJobStore, register_events, register_job
 from channels.layers import get_channel_layer
-import datetime
+from asgiref.sync import async_to_sync
+from server.interface import get_time_now
 import json
 
 
@@ -14,7 +15,7 @@ try:
     # 调度器使用DjangoJobStore()
     scheduler.add_jobstore(DjangoJobStore(), "default")
 
-    @register_job(scheduler, "interval", seconds=10)
+    @register_job(scheduler, "interval", seconds=5)
     def send_cost():
         # 计算各房间费用并返回
         room_list = Room.objects.all()
@@ -26,11 +27,15 @@ try:
                 total += record.fee
             # 计算正在服务的费用
             if room.state_serving or room.state_waiting:
-                time = (datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') - room.last_serving_time).total_seconds()
+                time = (get_time_now() - room.last_serving_time).total_seconds()
                 total += time * room.fee_rate  # 按秒算费用
             room.fee = total
-            channel_layer = get_channel_layer()
-            channel_layer.send(room.channel_name, json.dumps({'cost': total}))
+            if room.channel_name and room.state_working:
+                channel_layer = get_channel_layer()
+                async_to_sync(channel_layer.send)(room.channel_name, {
+                    'type': "chat.message",
+                    'text': {'cost': total},
+                })
             report = Report.objects.get(room_id=room.room_id)
             report.total_Fee = total
             report.save()

@@ -1,8 +1,9 @@
 from django.db import models
-
+from django.utils import timezone
 
 # Create your models here.
 # 基类
+
 class Basic(models.Model):
     fan_speed = models.IntegerField(default=0)  # 0:低速风 1:中速风 2:高速风
     fee_rate = models.FloatField(default=1)
@@ -22,7 +23,7 @@ class Room(Basic):
     target_temp = models.FloatField(default=25)
     serving_duration = models.FloatField(default=0)
     channel_name = models.CharField(max_length=100, default='')
-    last_serving_time = models.DateTimeField()
+    last_serving_time = models.DateTimeField(default=timezone.now)
     is_timer = models.BooleanField(default=False)
 
 
