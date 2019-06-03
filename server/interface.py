@@ -35,10 +35,9 @@ def update_Report(room, whichtype):
     report.save()
 
 
-def create_RequestDetailRecords(room):
-    RequestDetailRecords.objects.create(room=room, request_time=room.last_serving_time,
-                                        request_duration=(get_time_now() - room.last_serving_time).total_seconds(),
-                                        fan_speed=room.fan_speed, fee_rate=room.fee_rate, fee=0)
+def create_RequestDetailRecords(room,totaltime):
+    RequestDetailRecords.objects.create(room=room, request_time=room.last_serving_time, request_duration=totaltime,
+                                        fan_speed=room.fan_speed, fee_rate=room.fee_rate, fee=totaltime * room.fee_rate)
     update_Report(room, 3)
 
 
@@ -47,24 +46,16 @@ def set_waiting_to_serving(room):
     room.state_waiting = False
     room.last_serving_time = get_time_now()
     room.is_timer = False
-    channel_layer = get_channel_layer()
-    async_to_sync(channel_layer.send)(room.channel_name, {
-        'type': "chat.message",
-        'text': {'poweron': 'ok'},
-    })
     room.save()
 
 
 def set_serving_to_waiting(room):
+    totaltime = (get_time_now() - room.last_serving_time).total_seconds()
+    create_RequestDetailRecords(room, totaltime)
     room.state_serving = False
     room.state_waiting = True
-    room.serving_duration += (get_time_now() - room.last_serving_time).total_seconds()
+    room.serving_duration += totaltime
     room.is_timer = True
-    channel_layer = get_channel_layer()
-    async_to_sync(channel_layer.send)(room.channel_name, {
-        'type': "chat.message",
-        'text': {'poweron': 'busy'},
-    })
     room.save()
 
 
@@ -88,6 +79,11 @@ def scheduling():
         while i < room_list.count() and i < serving_count:
             if room_list[i].state_waiting:
                 set_waiting_to_serving(room_list[i])
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.send)(room_list[i].channel_name, {
+                'type': "chat.message",
+                'text': {'poweron': 'ok'},
+            })
             update_Report(room_list[i], 2)
             i += 1
         while i < room_list.count():
@@ -98,6 +94,11 @@ def scheduling():
                 room_list[i].is_timer = True
                 room_list[i].save()
                 timer.start()
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.send)(room_list[i].channel_name, {
+                'type': "chat.message",
+                'text': {'poweron': 'busy'},
+            })
             update_Report(room_list[i], 2)
             i += 1
 
@@ -113,14 +114,20 @@ def m_poweron(room_id, cur_temp, channel_name):
         room.fee_rate = wp.FeeRate_M
     else:
         room.fee_rate = wp.FeeRate_H
-    # 若房间室温与目标温度相同 咋整
     room.state_working = True
-    room.state_waiting = True
-    room.current_temp = cur_temp
     room.channel_name = channel_name
-    room.save()
+    room.current_temp = cur_temp
     update_Report(room, 1)
-    scheduling()
+    if cur_temp != wp.default_TargetTemp:
+        room.state_waiting = True
+        room.save()
+        scheduling()
+        return {}
+    else:
+        room.save()
+        return {'poweron': 'ok'}
+
+
     # 返回信息 好像不用发两次
     # room = Room.objects.get(room_id=room_id)
     # if True == room.state_serving and False == room.state_waiting:
@@ -132,7 +139,9 @@ def m_poweron(room_id, cur_temp, channel_name):
 def m_poweroff(room_id):
     room = Room.objects.get(room_id=room_id)
     if room.state_serving:  # 正在服务突然关机写服务时长
-        room.serving_duration += (get_time_now() - room.last_serving_time).total_seconds()
+        totaltime = (get_time_now() - room.last_serving_time).total_seconds()
+        create_RequestDetailRecords(room, totaltime)
+        room.serving_duration += totaltime
     room.state_working = False
     room.state_serving = False
     room.state_waiting = False
@@ -151,6 +160,10 @@ def m_config(room_id, fan, target_temp):
     room = Room.objects.get(room_id=room_id)
     wp = WorkingParameter.objects.all()[0]
     if fan != room.fan_speed:
+        totaltime = (get_time_now() - room.last_serving_time).total_seconds()
+        create_RequestDetailRecords(room, totaltime)
+        room.serving_duration += totaltime
+        room.last_serving_time = get_time_now()
         room.fan_speed = fan
         update_Report(room, 5)
         if room.fan_speed == 0:
@@ -180,8 +193,10 @@ def temp_update(room_id, cur_temp):
         # 当前温度达到目标温度时，room的状态从服务变为服务饱和,调整服务队列
         wp = WorkingParameter.objects.all()[0]
         if (cur_temp <= room.target_temp) and (wp.mode == 0) or (cur_temp >= room.target_temp) and (wp.mode == 1):
+            totaltime = (get_time_now() - room.last_serving_time).total_seconds()
+            create_RequestDetailRecords(room, totaltime)
             room.state_serving = False
-            room.serving_duration += (get_time_now() - room.last_serving_time).total_seconds()
+            room.serving_duration += totaltime
             room.save()
             scheduling()
             return {'finish': ''}
