@@ -37,7 +37,7 @@ def update_Report(room, whichtype):
 
 def create_RequestDetailRecords(room, totaltime):
     RequestDetailRecords.objects.create(room=room, request_time=room.last_serving_time, request_duration=totaltime,
-                                        fan_speed=room.fan_speed, fee_rate=room.fee_rate, fee=totaltime * room.fee_rate)
+                                        fan_speed=room.fan_speed, fee_rate=room.fee_rate, fee=abs(room.current_temp-room.init_cur_temp)*room.fee_rate)
     update_Report(room, 3)
 
 
@@ -46,6 +46,7 @@ def set_waiting_to_serving(room):
     room.state_waiting = False
     room.last_serving_time = get_time_now()
     room.is_timer = False
+    room.init_cur_temp = room.current_temp
     room.save()
 
 
@@ -160,10 +161,12 @@ def m_config(room_id, fan, target_temp):
     room = Room.objects.get(room_id=room_id)
     wp = WorkingParameter.objects.all()[0]
     if fan != room.fan_speed:
-        totaltime = (get_time_now() - room.last_serving_time).total_seconds()
-        create_RequestDetailRecords(room, totaltime)
-        room.serving_duration += totaltime
-        room.last_serving_time = get_time_now()
+        if room.state_serving:
+            totaltime = (get_time_now() - room.last_serving_time).total_seconds()
+            create_RequestDetailRecords(room, totaltime)
+            room.serving_duration += totaltime
+            room.last_serving_time = get_time_now()
+            room.init_cur_temp = room.current_temp
         room.fan_speed = fan
         update_Report(room, 5)
         if room.fan_speed == 0:
