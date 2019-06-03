@@ -10,46 +10,46 @@ import json
 
 
 # 开启定时工作
-scheduler = BackgroundScheduler()  # 实例化调度器
-try:
-    # 调度器使用DjangoJobStore()
-    scheduler.add_jobstore(DjangoJobStore(), "default")
-
-    @register_job(scheduler, "interval", seconds=5)
-    def send_cost():
-        # 计算各房间费用并返回
-        room_list = Room.objects.all()
-        for room in room_list:
-            # 计算详单的总费用
-            RDR_list = RequestDetailRecords.objects.filter(room_id=room.room_id)
-            total = 0
-            for record in RDR_list:
-                total += record.fee
-            # 计算正在服务或者等待的费用
-            # if room.state_serving:
-            #     time = (get_time_now() - room.last_serving_time).total_seconds()
-            #     total += time * room.fee_rate + room.temp_fee  # 按秒算费用
-            # elif room.state_waiting:
-            #     total += room.temp_fee
-            room.fee = total
-            room.save()
-            if room.channel_name and room.state_working:
-                channel_layer = get_channel_layer()
-                async_to_sync(channel_layer.send)(room.channel_name, {
-                    'type': "chat.message",
-                    'text': {'cost': total},
-                })
-            report = Report.objects.get(room_id=room.room_id)
-            report.total_Fee = total
-            report.save()
-        pass
-
-    register_events(scheduler)
-    scheduler.start()
-except Exception as e:
-    print(e)
-    # 有错误就停止定时器
-    scheduler.shutdown()
+# scheduler = BackgroundScheduler()  # 实例化调度器
+# try:
+#     # 调度器使用DjangoJobStore()
+#     scheduler.add_jobstore(DjangoJobStore(), "default")
+#
+#     @register_job(scheduler, "interval", seconds=5)
+#     def send_cost():
+#         # 计算各房间费用并返回
+#         room_list = Room.objects.all()
+#         for room in room_list:
+#             # 计算详单的总费用
+#             RDR_list = RequestDetailRecords.objects.filter(room_id=room.room_id)
+#             total = 0
+#             for record in RDR_list:
+#                 total += record.fee
+#             # 计算正在服务或者等待的费用
+#             # if room.state_serving:
+#             #     time = (get_time_now() - room.last_serving_time).total_seconds()
+#             #     total += time * room.fee_rate + room.temp_fee  # 按秒算费用
+#             # elif room.state_waiting:
+#             #     total += room.temp_fee
+#             room.fee = total
+#             room.save()
+#             if room.channel_name and room.state_working:
+#                 channel_layer = get_channel_layer()
+#                 async_to_sync(channel_layer.send)(room.channel_name, {
+#                     'type': "chat.message",
+#                     'text': {'cost': total},
+#                 })
+#             report = Report.objects.get(room_id=room.room_id)
+#             report.total_Fee = total
+#             report.save()
+#         pass
+#
+#     register_events(scheduler)
+#     scheduler.start()
+# except Exception as e:
+#     print(e)
+#     # 有错误就停止定时器
+#     scheduler.shutdown()
 
 
 # Create your views here.

@@ -34,20 +34,20 @@ class AirConsumer(WebsocketConsumer):
             dic3 = temp_update(info['poweron']['room_id'], info['poweron']['cur_temp'])
             if dic3:
                 self.send(json.dumps(dic3))
-            # self.send(json.dumps({'poweron': 'ok'}))
-            # self.send(json.dumps({'finish': ''}))
         elif "poweroff" in info:
             dic = m_poweroff(info['poweroff']['room_id'])
             self.send(json.dumps(dic))
         elif "config" in info:
             self.send(json.dumps({'config': 'ok'}))
             m_config(info['config']['room_id'], info['config']['fan'], info['config']['target_temp'])
-            # self.send(json.dumps(dic1))
         elif "temp_update" in info:
             dic = temp_update(info['temp_update']['room_id'], info['temp_update']['cur_temp'])
             if dic:
                 print(1)
                 self.send(json.dumps(dic))
+            # 更新温度时发费用
+            dic2 = count_fee(info['temp_update']['room_id'])
+            self.send(json.dumps(dic2))
 
     def chat_message(self, event):
         # 主动发送消息

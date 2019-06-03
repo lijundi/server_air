@@ -194,3 +194,27 @@ def temp_update(room_id, cur_temp):
             return {}
     room.save()
     return {}
+
+
+def count_fee(room_id):
+    # 计算各房间费用并返回
+    room = Room.objects.get(room_id=room_id)
+    report = Report.objects.get(room_id=room.room_id)
+    # 计算详单的总费用、总服务时间
+    RDR_list = RequestDetailRecords.objects.filter(room_id=room.room_id)
+    total_fee = 0.0
+    total_duration = 0.0
+    for record in RDR_list:
+        total_fee += record.fee
+        total_duration += record.request_duration
+    # 计算正在服务的费用和服务时间
+    if room.state_serving:
+        time = (get_time_now() - room.last_serving_time).total_seconds()
+        total_duration += time
+        total_fee += time * room.fee_rate  # 按秒算费用
+    room.fee = total_fee
+    report.total_Fee = total_fee
+    report.serving_duration = total_duration
+    room.save()
+    report.save()
+    return {'cost': "%.2f" % total_fee}
