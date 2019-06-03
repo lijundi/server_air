@@ -25,11 +25,14 @@ try:
             total = 0
             for record in RDR_list:
                 total += record.fee
-            # 计算正在服务的费用
-            if room.state_serving or room.state_waiting:
-                time = (get_time_now() - room.last_serving_time).total_seconds()
-                total += time * room.fee_rate  # 按秒算费用
+            # 计算正在服务或者等待的费用
+            # if room.state_serving:
+            #     time = (get_time_now() - room.last_serving_time).total_seconds()
+            #     total += time * room.fee_rate + room.temp_fee  # 按秒算费用
+            # elif room.state_waiting:
+            #     total += room.temp_fee
             room.fee = total
+            room.save()
             if room.channel_name and room.state_working:
                 channel_layer = get_channel_layer()
                 async_to_sync(channel_layer.send)(room.channel_name, {
@@ -39,7 +42,6 @@ try:
             report = Report.objects.get(room_id=room.room_id)
             report.total_Fee = total
             report.save()
-            room.save()
         pass
 
     register_events(scheduler)

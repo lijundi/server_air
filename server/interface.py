@@ -5,7 +5,7 @@ import threading
 import datetime
 import json
 
-serving_count = 1#3
+serving_count = 1  # 3
 waiting_count = 1
 waiting_time_length = 120
 
@@ -113,6 +113,7 @@ def m_poweron(room_id, cur_temp, channel_name):
         room.fee_rate = wp.FeeRate_M
     else:
         room.fee_rate = wp.FeeRate_H
+    # 若房间室温与目标温度相同 咋整
     room.state_working = True
     room.state_waiting = True
     room.current_temp = cur_temp
@@ -130,6 +131,8 @@ def m_poweron(room_id, cur_temp, channel_name):
 
 def m_poweroff(room_id):
     room = Room.objects.get(room_id=room_id)
+    if room.state_serving:  # 正在服务突然关机写服务时长
+        room.serving_duration += (get_time_now() - room.last_serving_time).total_seconds()
     room.state_working = False
     room.state_serving = False
     room.state_waiting = False

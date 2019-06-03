@@ -46,6 +46,7 @@ class AirConsumer(WebsocketConsumer):
         elif "temp_update" in info:
             dic = temp_update(info['temp_update']['room_id'], info['temp_update']['cur_temp'])
             if dic:
+                print(1)
                 self.send(json.dumps(dic))
 
     def chat_message(self, event):
