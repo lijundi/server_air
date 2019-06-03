@@ -5,9 +5,9 @@ import threading
 import datetime
 import json
 
-serving_count = 3  # 3
+serving_count = 1  # 3
 waiting_count = 1
-waiting_time_length = 120
+waiting_time_length = 30
 
 
 #问题
@@ -37,7 +37,8 @@ def update_Report(room, whichtype):
 
 def create_RequestDetailRecords(room, totaltime):
     RequestDetailRecords.objects.create(room=room, request_time=room.last_serving_time, request_duration=totaltime,
-                                        fan_speed=room.fan_speed, fee_rate=room.fee_rate, fee=abs(room.current_temp-room.init_cur_temp)*room.fee_rate)
+                                        fan_speed=room.fan_speed, fee_rate=room.fee_rate,
+                                        fee=abs(room.current_temp - room.init_cur_temp) * room.fee_rate)
     update_Report(room, 3)
 
 
@@ -230,8 +231,10 @@ def count_fee(room_id):
     if room.state_serving:
         time = (get_time_now() - room.last_serving_time).total_seconds()
         total_duration += time
-        total_fee += time * room.fee_rate  # 按秒算费用
+        # total_fee += time * room.fee_rate  # 按秒算费用
+        total_fee += abs(room.current_temp - room.init_cur_temp) * room.fee_rate
     room.fee = total_fee
+    room.serving_duration = total_duration
     report.total_Fee = total_fee
     report.serving_duration = total_duration
     room.save()

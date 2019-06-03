@@ -105,7 +105,13 @@
 
             <tr>
                 <td><b>风速</b></td>
-                <td>{{ r.fan_speed }}</td>
+                {% if r.fan_speed == 0 %}
+                    <td>低速</td>
+                {% elif r.fan_speed == 1 %}
+                    <td>中速</td>
+                {% else %}
+                    <td>高速</td>
+                {% endif %}
             </tr>
 
             <tr>
