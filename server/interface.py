@@ -70,7 +70,7 @@ def waiting_timer(room_id):
         serving_list = Room.objects.filter(state_working=True, state_waiting=False, state_serving=True).order_by(
             '-serving_duration')
         set_serving_to_waiting(serving_list[0])
-        timer = threading.Timer(waiting_time_length, waiting_timer(serving_list[0].room_id))
+        timer = threading.Timer(waiting_time_length, waiting_timer, kwargs={'room_id': serving_list[0].room_id})
         timer.start()
 
 
@@ -92,7 +92,7 @@ def scheduling():
             if room_list[i].state_serving:
                     set_serving_to_waiting(room_list[i])
             if room_list[i].fan_speed == room_list[serving_count - 1].fan_speed and not room_list[i].is_timer:
-                timer = threading.Timer(waiting_time_length, waiting_timer(room_list[i].room_id))
+                timer = threading.Timer(waiting_time_length, waiting_timer, kwargs={'room_id': room_list[i].room_id})
                 room_list[i].is_timer = True
                 room_list[i].save()
                 timer.start()
