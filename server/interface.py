@@ -5,7 +5,7 @@ import threading
 import datetime
 import json
 
-serving_count = 1  # 3
+serving_count = 2  # 3
 waiting_count = 1
 waiting_time_length = 30
 
@@ -36,22 +36,31 @@ def update_Report(room, whichtype):
 
 
 def create_RequestDetailRecords(room, totaltime):
-    RequestDetailRecords.objects.create(room=room, request_time=room.last_serving_time, request_duration=totaltime,
-                                        fan_speed=room.fan_speed, fee_rate=room.fee_rate,
-                                        fee=abs(room.current_temp - room.init_cur_temp) * room.fee_rate)
-    update_Report(room, 3)
+    # 如果费用为零 则不生成详单
+    if room.current_temp != room.init_cur_temp:
+        RequestDetailRecords.objects.create(room=room, request_time=room.last_serving_time, request_duration=totaltime,
+                                            fan_speed=room.fan_speed, fee_rate=room.fee_rate,
+                                            fee=abs(room.current_temp - room.init_cur_temp) * room.fee_rate)
+        update_Report(room, 3)
 
 
-def set_waiting_to_serving(room):
+def set_waiting_to_serving(room_):
+    room = Room.objects.get(room_id=room_.room_id)
     room.state_serving = True
     room.state_waiting = False
     room.last_serving_time = get_time_now()
     room.is_timer = False
     room.init_cur_temp = room.current_temp
     room.save()
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.send)(room.channel_name, {
+        'type': "chat.message",
+        'text': {'poweron': 'ok'},
+    })
 
 
-def set_serving_to_waiting(room):
+def set_serving_to_waiting(room_):
+    room = Room.objects.get(room_id=room_.room_id)
     totaltime = (get_time_now() - room.last_serving_time).total_seconds()
     create_RequestDetailRecords(room, totaltime)
     room.state_serving = False
@@ -59,24 +68,38 @@ def set_serving_to_waiting(room):
     room.serving_duration += totaltime
     room.is_timer = True
     room.save()
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.send)(room.channel_name, {
+        'type': "chat.message",
+        'text': {'poweron': 'busy'},
+    })
 
 
 def waiting_timer(room_id):
     room = Room.objects.get(room_id=room_id)
     # 判断他当前是否已经在服务队列中
     if room.state_waiting:
-        set_waiting_to_serving(room)
-        # 将服务时长最长的房间调入等待队列
-        serving_list = Room.objects.filter(state_working=True, state_waiting=False, state_serving=True).order_by(
-            '-serving_duration')
-        set_serving_to_waiting(serving_list[0])
-        timer = threading.Timer(waiting_time_length, waiting_timer, kwargs={'room_id': serving_list[0].room_id})
+        # 将风速最小且服务时长最长的房间调入等待队列
+        serving_list = Room.objects.order_by(
+            '-for_timer_weight').filter(state_working=True, state_waiting=False, state_serving=True)
+        to_waiting_room = serving_list[0]
+        timer = threading.Timer(waiting_time_length, waiting_timer, kwargs={'room_id': to_waiting_room.room_id})
         timer.start()
+        set_waiting_to_serving(room)
+        set_serving_to_waiting(to_waiting_room)
 
 
 def scheduling():
         room_list = Room.objects.filter(state_working=True).exclude(state_waiting=False, state_serving=False).order_by(
             '-fan_speed')
+        # if room_list.count() == 2:
+        #     print("schedule")
+        #     print(room_list[0])
+        #     print(room_list[0].state_serving)
+        #     print(room_list[0].state_waiting)
+        #     print(room_list[1])
+        #     print(room_list[1].state_serving)
+        #     print(room_list[1].state_waiting)
         i = 0
         while i < room_list.count() and i < serving_count:
             if room_list[i].state_waiting:
@@ -235,6 +258,7 @@ def count_fee(room_id):
         total_fee += abs(room.current_temp - room.init_cur_temp) * room.fee_rate
     room.fee = total_fee
     room.serving_duration = total_duration
+    room.for_timer_weight = total_duration - room.fan_speed * 10000  # 用于定时器排序
     report.total_Fee = total_fee
     report.serving_duration = total_duration
     room.save()

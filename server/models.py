@@ -26,6 +26,7 @@ class Room(Basic):
     last_serving_time = models.DateTimeField(default=timezone.now)
     init_cur_temp = models.FloatField(default=25)
     is_timer = models.BooleanField(default=False)
+    for_timer_weight = models.FloatField(default=0)  # 时长-风速*10000
 
 
 # 详单类
