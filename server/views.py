@@ -8,7 +8,11 @@ from asgiref.sync import async_to_sync
 from server.interface import get_time_now
 import json
 
-
+# 启动时情空详单数据
+try:
+    RequestDetailRecords.objects.all().delete()
+except Exception as e:
+    print(e)
 # 开启定时工作
 # scheduler = BackgroundScheduler()  # 实例化调度器
 # try:

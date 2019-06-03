@@ -24,6 +24,7 @@ class Room(Basic):
     serving_duration = models.FloatField(default=0)
     channel_name = models.CharField(max_length=100, default='')
     last_serving_time = models.DateTimeField(default=timezone.now)
+    init_cur_temp = models.FloatField(default=25)
     is_timer = models.BooleanField(default=False)
 
 

@@ -31,11 +31,13 @@ class AirConsumer(WebsocketConsumer):
                                 'fan': wp.fan}}
             self.send(json.dumps(dic1))
             dic2 = m_poweron(info['poweron']['room_id'], info['poweron']['cur_temp'], self.channel_name)
-            if dic2:
+            if dic2:  # 开机时室温温度与目标温度一致
                 self.send(json.dumps(dic2))
-            dic3 = temp_update(info['poweron']['room_id'], info['poweron']['cur_temp'])
-            if dic3:
-                self.send(json.dumps(dic3))
+                self.send(json.dumps({'finish': ''}))
+            # else:
+            #     dic3 = temp_update(info['poweron']['room_id'], info['poweron']['cur_temp'])
+            #     if dic3:
+            #         self.send(json.dumps(dic3))
         elif "poweroff" in info:
             dic = m_poweroff(info['poweroff']['room_id'])
             self.send(json.dumps(dic))
@@ -45,7 +47,6 @@ class AirConsumer(WebsocketConsumer):
         elif "temp_update" in info:
             dic = temp_update(info['temp_update']['room_id'], info['temp_update']['cur_temp'])
             if dic:
-                print(1)
                 self.send(json.dumps(dic))
             # 更新温度时发费用
             dic2 = count_fee(info['temp_update']['room_id'])

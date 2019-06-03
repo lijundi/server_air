@@ -5,7 +5,7 @@ import threading
 import datetime
 import json
 
-serving_count = 1  # 3
+serving_count = 3  # 3
 waiting_count = 1
 waiting_time_length = 120
 
@@ -35,7 +35,7 @@ def update_Report(room, whichtype):
     report.save()
 
 
-def create_RequestDetailRecords(room,totaltime):
+def create_RequestDetailRecords(room, totaltime):
     RequestDetailRecords.objects.create(room=room, request_time=room.last_serving_time, request_duration=totaltime,
                                         fan_speed=room.fan_speed, fee_rate=room.fee_rate, fee=totaltime * room.fee_rate)
     update_Report(room, 3)
@@ -192,7 +192,8 @@ def temp_update(room_id, cur_temp):
     if room.state_working:
         # 当前温度达到目标温度时，room的状态从服务变为服务饱和,调整服务队列
         wp = WorkingParameter.objects.all()[0]
-        if (cur_temp <= room.target_temp) and (wp.mode == 0) or (cur_temp >= room.target_temp) and (wp.mode == 1):
+        if ((cur_temp <= room.target_temp) and (wp.mode == 0) or (cur_temp >= room.target_temp) and (
+                wp.mode == 1)) and room.state_serving:
             totaltime = (get_time_now() - room.last_serving_time).total_seconds()
             create_RequestDetailRecords(room, totaltime)
             room.state_serving = False
