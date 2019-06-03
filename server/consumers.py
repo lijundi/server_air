@@ -30,7 +30,9 @@ class AirConsumer(WebsocketConsumer):
                                 'medfan_change_temp': wp.medfan_change_temp,
                                 'fan': wp.fan}}
             self.send(json.dumps(dic1))
-            m_poweron(info['poweron']['room_id'], info['poweron']['cur_temp'], self.channel_name)
+            dic2 = m_poweron(info['poweron']['room_id'], info['poweron']['cur_temp'], self.channel_name)
+            if dic2:
+                self.send(json.dumps(dic2))
             dic3 = temp_update(info['poweron']['room_id'], info['poweron']['cur_temp'])
             if dic3:
                 self.send(json.dumps(dic3))
